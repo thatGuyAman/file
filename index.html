@@ -15,7 +15,13 @@
       font-family: Arial, sans-serif;
       background-color: #f4f6f8;
       color: #333;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Initial Selection Screen */
+    #menu {
+      height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -23,61 +29,153 @@
       padding: 20px;
     }
 
-    h1 {
+    #menu h1 {
       margin-bottom: 30px;
       color: #2c3e50;
     }
 
-    .container {
+    .options {
       display: flex;
       flex-direction: column;
       gap: 16px;
       width: 100%;
-      max-width: 400px;
+      max-width: 380px;
     }
 
-    .pdf-bar {
+    .option-btn {
       display: flex;
       justify-content: space-between;
       align-items: center;
       background-color: #2c3e50;
       color: #fff;
-      text-decoration: none;
+      border: none;
       font-size: 20px;
       font-weight: bold;
       padding: 20px 24px;
       border-radius: 8px;
+      cursor: pointer;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       transition: background-color 0.2s, transform 0.1s;
     }
 
-    .pdf-bar:hover {
+    .option-btn:hover {
       background-color: #3498db;
       transform: translateY(-2px);
     }
 
-    .pdf-bar span {
+    .option-btn span {
       font-size: 14px;
       font-weight: normal;
       opacity: 0.85;
+    }
+
+    /* PDF Viewer Screen (Hidden Initially) */
+    #viewer {
+      display: none;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .toolbar {
+      background: #2c3e50;
+      color: #fff;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .toolbar button,
+    .toolbar a {
+      background: #3498db;
+      color: #fff;
+      border: none;
+      text-decoration: none;
+      padding: 8px 14px;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .toolbar button:hover,
+    .toolbar a:hover {
+      background: #2980b9;
+    }
+
+    .toolbar button.back-btn {
+      background: #7f8c8d;
+    }
+
+    .toolbar button.back-btn:hover {
+      background: #636e72;
+    }
+
+    #pdfTitle {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    iframe {
+      flex: 1;
+      width: 100%;
+      border: none;
     }
   </style>
 </head>
 <body>
 
-  <h1>Course Documents</h1>
-
-  <div class="container">
-    <a href="CD.pdf" target="_blank" class="pdf-bar">
-      CD
-      <span>Open PDF →</span>
-    </a>
-
-    <a href="CN.pdf" target="_blank" class="pdf-bar">
-      CN
-      <span>Open PDF →</span>
-    </a>
+  <!-- Step 1: Selection Screen -->
+  <div id="menu">
+    <h1>Select a Document</h1>
+    <div class="options">
+      <button class="option-btn" onclick="openPDF('CD.pdf', 'CD')">
+        CD <span>View PDF →</span>
+      </button>
+      <button class="option-btn" onclick="openPDF('CN.pdf', 'CN')">
+        CN <span>View PDF →</span>
+      </button>
+    </div>
   </div>
+
+  <!-- Step 2: PDF Viewer Screen -->
+  <div id="viewer">
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <button class="back-btn" onclick="goBack()">← Back</button>
+        <span id="pdfTitle"></span>
+      </div>
+      <div>
+        <button onclick="openPDF('CD.pdf', 'CD')">CD</button>
+        <button onclick="openPDF('CN.pdf', 'CN')">CN</button>
+        <a id="newTabLink" href="#" target="_blank">Open in New Tab</a>
+      </div>
+    </div>
+    <iframe id="pdfFrame" src="" title="PDF Viewer"></iframe>
+  </div>
+
+  <script>
+    function openPDF(file, title) {
+      document.getElementById('pdfFrame').src = file;
+      document.getElementById('pdfTitle').textContent = title;
+      document.getElementById('newTabLink').href = file;
+
+      document.getElementById('menu').style.display = 'none';
+      document.getElementById('viewer').style.display = 'flex';
+    }
+
+    function goBack() {
+      document.getElementById('pdfFrame').src = '';
+      document.getElementById('viewer').style.display = 'none';
+      document.getElementById('menu').style.display = 'flex';
+    }
+  </script>
 
 </body>
 </html>
